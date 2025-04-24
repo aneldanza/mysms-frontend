@@ -33,7 +33,7 @@ export class SignInComponent {
   onSubmit() {
     if (this.form.valid) {
       this.auth.signIn(this.form.value).subscribe({
-        next: () => this.router.navigate(['/messages']),
+        next: () => this.router.navigate(['']),
         error: (err) => console.error(err),
       });
     }
