@@ -14,15 +14,17 @@ export class HeaderComponent {
   auth = inject(AuthService);
   router = inject(Router);
   isLoggedIn = this.auth.isLoggedIn();
+  user$ = this.auth.user$;
 
   logOut() {
     this.auth.logOut().subscribe(() => {
-      this.router.navigate(['/login']);
+      this.router.navigate(['/sign-in']);
     });
   }
 
   get username() {
-    const user = this.auth.getUser();
-    return user?.username || 'Guest';
+    // const user = this.auth.getUser();
+    // return user?.username || 'Guest';
+    return this.auth.getUser()?.username || 'Guest';
   }
 }
