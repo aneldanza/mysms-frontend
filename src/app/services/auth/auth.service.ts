@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000';
-  private tokenKey = 'sms_messenger_jwt';
+  private apiUrl = environment.baseApi;
+  private tokenKey = environment.tokenKey;
 
   constructor(private http: HttpClient, private router: Router) {}
 
