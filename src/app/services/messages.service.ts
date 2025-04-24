@@ -10,6 +10,18 @@ export interface Message {
   createdAt?: string;
 }
 
+export interface MessageResponse {
+  body: string;
+  created_at: string;
+  status: string;
+  to: string;
+  twilio_sid: string;
+  updated_at: string;
+  _id: {
+    $oid: string;
+  };
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -18,11 +30,11 @@ export class MessagesService {
 
   constructor(private http: HttpClient) {}
 
-  sendMessage(message: Message): Observable<Message> {
-    return this.http.post<Message>(this.apiUrl, { message });
+  sendMessage(message: Message): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(this.apiUrl, { message });
   }
 
-  getMessages(): Observable<Message[]> {
-    return this.http.get<Message[]>(this.apiUrl);
+  getMessages(): Observable<MessageResponse[]> {
+    return this.http.get<MessageResponse[]>(this.apiUrl);
   }
 }
