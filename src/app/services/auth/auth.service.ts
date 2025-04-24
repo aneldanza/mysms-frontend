@@ -3,6 +3,15 @@ import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
+import { jwtDecode } from 'jwt-decode';
+
+interface DecodedJWT {
+  email?: string;
+  username?: string;
+  jti?: string;
+  exp: number;
+  // any other fields you included in your token
+}
 
 @Injectable({
   providedIn: 'root',
@@ -54,12 +63,21 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    const token = this.getToken();
-    if (!token) {
-      return false;
-    }
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    const expirationDate = new Date(payload.exp * 1000);
+    const user = this.getUser();
+    if (!user) return false;
+    const expirationDate = new Date(user.exp * 1000);
     return expirationDate > new Date();
+  }
+
+  getUser(): DecodedJWT | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      return jwtDecode<DecodedJWT>(token);
+    } catch (err) {
+      console.error('Invalid JWT:', err);
+      return null;
+    }
   }
 }
