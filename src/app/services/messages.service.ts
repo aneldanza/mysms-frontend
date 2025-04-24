@@ -2,18 +2,26 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export type MessageStatus =
+  | 'queued'
+  | 'sending'
+  | 'sent'
+  | 'delivered'
+  | 'undelivered'
+  | 'failed';
+
 export interface Message {
   _id?: string;
   to: string;
   body: string;
-  status?: string;
+  status?: MessageStatus;
   createdAt?: string;
 }
 
 export interface MessageResponse {
   body: string;
   created_at: string;
-  status: string;
+  status: MessageStatus;
   to: string;
   twilio_sid: string;
   updated_at: string;
