@@ -38,19 +38,27 @@ export class AuthService {
   }
 
   signUp(data: any) {
-    return this.http.post(`${this.apiUrl}/users`, { user: data }).pipe(
-      tap((response: any) => {
-        this.handleToken(response);
-      })
-    );
+    return this.http
+      .post(`${this.apiUrl}/users`, { user: data }, { observe: 'response' })
+      .pipe(
+        tap((response: any) => {
+          this.handleToken(response);
+        })
+      );
   }
 
   signIn(data: any) {
-    return this.http.post(`${this.apiUrl}/users/sign_in`, { user: data }).pipe(
-      tap((response: any) => {
-        this.handleToken(response);
-      })
-    );
+    return this.http
+      .post(
+        `${this.apiUrl}/users/sign_in`,
+        { user: data },
+        { observe: 'response' }
+      )
+      .pipe(
+        tap((response: any) => {
+          this.handleToken(response);
+        })
+      );
   }
 
   logOut() {
@@ -62,16 +70,18 @@ export class AuthService {
   }
 
   handleToken(res: any) {
-    const token = res?.headers?.get('Authorization')?.replace('Bearer ', '');
+    const token = res.headers?.get('Authorization')?.replace('Bearer ', '');
     if (token) {
       this.setToken(token);
+    } else {
+      console.warn('No JWT token found in Authorization header');
     }
   }
 
   clearToken() {
     localStorage.removeItem(this.tokenKey);
     this.userSubject.next(null);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/sign-in']);
   }
 
   getToken(): string | null {
@@ -85,9 +95,13 @@ export class AuthService {
 
   isLoggedIn() {
     const user = this.getUser();
-    if (!user) return false;
-    const expirationDate = new Date(user.exp * 1000);
-    return expirationDate > new Date();
+    return !!user && !this.tokenExpired();
+  }
+
+  tokenExpired() {
+    const user = this.getUser();
+    if (!user?.exp) return true;
+    return new Date(user.exp * 1000) <= new Date();
   }
 
   getUser(): User | null {
