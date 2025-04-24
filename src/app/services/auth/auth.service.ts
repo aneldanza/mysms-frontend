@@ -5,12 +5,10 @@ import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { jwtDecode } from 'jwt-decode';
 
-interface User {
-  email?: string;
-  username?: string;
+interface DecodedToken {
   jti: string;
   exp: number;
-  // any other fields you included in your token
+  scp: string;
 }
 
 @Injectable({
@@ -19,21 +17,21 @@ interface User {
 export class AuthService {
   private apiUrl = environment.baseApi;
   private tokenKey = environment.tokenKey;
-  private userSubject = new BehaviorSubject<User | null>(null);
-  user$ = this.userSubject.asObservable();
+  private decodedTokenSubject = new BehaviorSubject<DecodedToken | null>(null);
+  decodedToken$ = this.decodedTokenSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {
     const token = this.getToken();
-    if (token) this.setUserFromToken(token);
+    if (token) this.setInfoFromToken(token);
   }
 
-  setUserFromToken(token: string) {
+  setInfoFromToken(token: string) {
     try {
-      const user = jwtDecode<User>(token);
-      this.userSubject.next(user);
+      const info = jwtDecode<DecodedToken>(token);
+      this.decodedTokenSubject.next(info);
     } catch (err) {
       console.error('Invalid JWT:', err);
-      this.userSubject.next(null);
+      this.decodedTokenSubject.next(null);
     }
   }
 
@@ -80,7 +78,7 @@ export class AuthService {
 
   clearToken() {
     localStorage.removeItem(this.tokenKey);
-    this.userSubject.next(null);
+    this.decodedTokenSubject.next(null);
     this.router.navigate(['/sign-in']);
   }
 
@@ -90,7 +88,7 @@ export class AuthService {
 
   setToken(token: string) {
     localStorage.setItem(this.tokenKey, token);
-    this.setUserFromToken(token);
+    this.setInfoFromToken(token);
   }
 
   isLoggedIn() {
@@ -104,7 +102,7 @@ export class AuthService {
     return new Date(user.exp * 1000) <= new Date();
   }
 
-  getUser(): User | null {
-    return this.userSubject.value;
+  getUser(): DecodedToken | null {
+    return this.decodedTokenSubject.value;
   }
 }
