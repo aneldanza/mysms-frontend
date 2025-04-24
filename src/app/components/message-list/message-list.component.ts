@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {
   MessagesService,
   MessageResponse,
-} from '../../services/messages.service';
+} from '../../services/messages/messages.service';
 
 @Component({
   selector: 'app-message-list',

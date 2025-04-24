@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Message, MessagesService } from '../../services/messages.service';
+import {
+  Message,
+  MessagesService,
+} from '../../services/messages/messages.service';
 import { MessageListComponent } from '../message-list/message-list.component';
 
 @Component({
