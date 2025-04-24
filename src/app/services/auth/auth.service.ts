@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { tap, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { jwtDecode } from 'jwt-decode';
 
-interface DecodedJWT {
+interface User {
   email?: string;
   username?: string;
-  jti?: string;
+  jti: string;
   exp: number;
   // any other fields you included in your token
 }
@@ -19,8 +19,23 @@ interface DecodedJWT {
 export class AuthService {
   private apiUrl = environment.baseApi;
   private tokenKey = environment.tokenKey;
+  private userSubject = new BehaviorSubject<User | null>(null);
+  user$ = this.userSubject.asObservable();
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    const token = this.getToken();
+    if (token) this.setUserFromToken(token);
+  }
+
+  setUserFromToken(token: string) {
+    try {
+      const user = jwtDecode<User>(token);
+      this.userSubject.next(user);
+    } catch (err) {
+      console.error('Invalid JWT:', err);
+      this.userSubject.next(null);
+    }
+  }
 
   signUp(data: any) {
     return this.http.post(`${this.apiUrl}/users`, { user: data }).pipe(
@@ -49,17 +64,23 @@ export class AuthService {
   handleToken(res: any) {
     const token = res?.headers?.get('Authorization')?.replace('Bearer ', '');
     if (token) {
-      localStorage.setItem(this.tokenKey, token);
+      this.setToken(token);
     }
   }
 
   clearToken() {
     localStorage.removeItem(this.tokenKey);
+    this.userSubject.next(null);
     this.router.navigate(['/login']);
   }
 
-  getToken() {
+  getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
+  }
+
+  setToken(token: string) {
+    localStorage.setItem(this.tokenKey, token);
+    this.setUserFromToken(token);
   }
 
   isLoggedIn() {
@@ -69,15 +90,7 @@ export class AuthService {
     return expirationDate > new Date();
   }
 
-  getUser(): DecodedJWT | null {
-    const token = this.getToken();
-    if (!token) return null;
-
-    try {
-      return jwtDecode<DecodedJWT>(token);
-    } catch (err) {
-      console.error('Invalid JWT:', err);
-      return null;
-    }
+  getUser(): User | null {
+    return this.userSubject.value;
   }
 }
