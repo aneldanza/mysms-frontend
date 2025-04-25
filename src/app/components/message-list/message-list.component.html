@@ -35,16 +35,19 @@
   No messages sent yet.
 </div> -->
 
-<div class="card">
-  <h2 class="text-xl font-bold mb-4">
+<div class="shadow-lg rounded-xl bg-background-card">
+  <h2
+    class="text-xl font-bold mb-4 text-primary-light pt-6 md:pt-8 lg:pt-12 pb-8 px-8 md:px-12 lg:px-16"
+  >
     Message History ({{ messages.length }})
   </h2>
 
-  <div *ngIf="isLoading" class="text-gray-500">Loading messages...</div>
-  <div *ngIf="error" class="text-red-500">{{ error }}</div>
-
-  <div class="space-y-4 lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto pr-2">
-    <div *ngFor="let msg of messages" class="message-bubble animate-fade-in">
+  <div
+    class="space-y-6 lg:max-h-[600px] lg:overflow-y-auto px-8 md:px-12 lg:px-16 pb-6 md:pb-8 lg:pb-12"
+  >
+    <div *ngIf="isLoading" class="text-gray-500">Loading messages...</div>
+    <div *ngIf="error" class="text-red-500">{{ error }}</div>
+    <div *ngFor="let msg of messages" class="">
       <div class="message-meta">
         <div class="message-to">{{ msg.to }}</div>
         <span class="text-gray-500">
@@ -52,15 +55,17 @@
           {{ msg.created_at | date : "shortTime" }}
         </span>
       </div>
-      <div class="message-body">{{ msg.body }}</div>
-      <div class="flex justify-between items-center mt-2">
-        <div class="message-status mt-2 text-sm">
+      <div class="message-body border-border">{{ msg.body }}</div>
+      <div class="flex justify-between items-center">
+        <div
+          class="message-status mt-2 text-sm font-light italic animate-fade-in"
+        >
           <span
             [ngClass]="{
-              'text-green-600': msg.status === 'delivered',
+              'text-secondary-accent': msg.status === 'delivered',
               'text-yellow-600':
                 msg.status === 'sent' || msg.status === 'sending',
-              'text-blue-600': msg.status === 'queued',
+              'text-primary-accent': msg.status === 'queued',
               'text-red-600':
                 msg.status === 'undelivered' || msg.status === 'failed',
               'text-gray-500': !msg.status

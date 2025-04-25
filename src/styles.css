@@ -1,6 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
 
+@layer base {
+  :root {
+    /* --color-primary: rgba(99, 102, 241, 1); /* #6366F1 */
+    /* --color-primary-dark: rgba(79, 70, 229, 1); /* #4F46E5 */
+    --color-success: rgba(34, 197, 94, 1); /* #22C55E */
+    --color-danger: rgba(239, 68, 68, 1); /* #EF4444 */
+    --color-bg-light: rgba(249, 250, 251, 1); /* #F9FAFB */
+    --color-white: rgba(255, 255, 255, 1); /* #FFFFFF */
+    --color-text-primary: rgba(17, 24, 39, 1); /* #111827 */
+    --color-text-secondary: rgba(107, 114, 128, 1); /* #6B7280 */
+    /* --color-border-default: rgba(229, 231, 235, 1); #E5E7EB */
+  }
+}
+
+@theme {
+  --color-primary: rgba(41, 50, 65, 1);
+  --color-primary-light: rgba(71, 85, 105, 1);
+  --color-primary-accent: rgba(99, 102, 241, 1);
+  --color-primary-accent-hover: rgba(79, 70, 229, 1);
+  --color-secondary-accent: rgba(16, 185, 129, 1);
+  --color-secondary-accent-hover: rgba(5, 150, 105, 1);
+  --color-background-light: rgba(245, 247, 250, 1);
+  --color-background-card: rgba(255, 255, 255, 1);
+  --color-border: rgba(229, 231, 235, 1);
+  --color-error: rgba(239, 68, 68, 1);
+  --color-success: rgba(34, 197, 94, 1);
+  --color-info: rgba(59, 130, 246, 1);
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
@@ -16,12 +45,16 @@
   animation: fade-in 0.3s ease-out;
 }
 
-.card {
-  @apply shadow-lg p-4 rounded-lg bg-white;
+.outlet {
+  @apply min-h-[calc(100vh-6rem)] h-full flex items-center justify-center p-4 md:p-8 lg:p-12;
 }
 
-.message-bubble {
-  @apply border p-3 rounded shadow-sm bg-gray-50 hover:bg-gray-100 transition;
+.header {
+  @apply px-4 md:px-8 lg:px-12 h-24;
+}
+
+.card {
+  @apply shadow-lg rounded-xl bg-white py-6 md:py-8 lg:py-12 px-8 md:px-12 lg:px-16;
 }
 
 .message-meta {
@@ -29,13 +62,21 @@
 }
 
 .message-to {
-  @apply font-bold text-green-700 flex items-center gap-1;
+  @apply font-bold  flex items-center gap-1;
 }
 
 .message-body {
-  @apply text-gray-900 whitespace-pre-line;
+  @apply text-gray-900 whitespace-pre-line border rounded-lg p-2;
 }
 
 .message-length {
   @apply text-right text-xs text-gray-500 mt-1;
+}
+
+.input-field {
+  @apply mt-1 block w-full p-2 rounded-md border focus:outline-none focus:ring-2 sm:text-sm;
+}
+
+.label {
+  @apply block text-sm font-medium;
 }
