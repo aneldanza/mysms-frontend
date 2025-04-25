@@ -101,6 +101,7 @@ export class AuthService {
   handleLogin(res: any) {
     const token = res.headers?.get('Authorization')?.replace('Bearer ', '');
     if (token) {
+      console.log('JWT token found in Authorization header:', token);
       this.setToken(token);
       this.getUserInfo().subscribe();
     } else {
@@ -120,6 +121,7 @@ export class AuthService {
   }
 
   setToken(token: string) {
+    console.log('Setting token:', token);
     localStorage.setItem(this.tokenKey, token);
     this.setInfoFromToken(token);
   }
