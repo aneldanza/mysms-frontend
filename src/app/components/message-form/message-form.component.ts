@@ -20,6 +20,7 @@ export class MessageFormComponent {
   loading = false;
   error: string | null = null;
   success = false;
+  tooLong = false;
 
   form = this.fb.group({
     to: [
@@ -52,8 +53,39 @@ export class MessageFormComponent {
       .subscribe((res) => {
         if (res) {
           this.success = true;
-          this.form.get('body')?.reset();
+          this.resetBodyField();
         }
       });
+  }
+
+  resetBodyField() {
+    this.form.get('body')?.reset();
+    this.tooLong = false;
+  }
+
+  onInputLimit(event: Event) {
+    const input = event.target as HTMLTextAreaElement;
+    if (input.value.length > 250) {
+      this.tooLong = true;
+      input.value = input.value.slice(0, 250);
+      this.form.get('body')?.setValue(input.value);
+    } else {
+      this.tooLong = false;
+    }
+  }
+
+  onPasteLimit(event: ClipboardEvent) {
+    const paste = event.clipboardData?.getData('text') || '';
+    const currentValue = this.form.get('body')?.value || '';
+    const total = currentValue.length + paste.length;
+
+    if (total > 250) {
+      event.preventDefault();
+      this.tooLong = true;
+      const allowedPaste = paste.slice(0, 250 - currentValue.length);
+      this.form.get('body')?.setValue(currentValue + allowedPaste);
+    } else {
+      this.tooLong = false;
+    }
   }
 }
