@@ -51,7 +51,7 @@
 }
 
 .card {
-  @apply shadow-lg p-4 rounded-lg bg-white;
+  @apply shadow-lg p-4 rounded-xl bg-white;
 }
 
 .message-bubble {
@@ -72,4 +72,12 @@
 
 .message-length {
   @apply text-right text-xs text-gray-500 mt-1;
+}
+
+.input-field {
+  @apply mt-1 block w-full p-2 rounded-md border border-gray-500  focus:border-blue-500 focus:ring-blue-500 sm:text-sm;
+}
+
+.label {
+  @apply block text-sm font-medium;
 }
