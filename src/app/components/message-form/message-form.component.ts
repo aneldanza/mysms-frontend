@@ -1,11 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {
   MessagesService,
   Message,
+  MessageResponse,
 } from '../../services/messages/messages.service';
 import { catchError, finalize, of } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-message-form',
@@ -16,6 +18,7 @@ import { catchError, finalize, of } from 'rxjs';
 export class MessageFormComponent {
   fb = inject(FormBuilder);
   messageService = inject(MessagesService);
+  @Output() sendMessage = new EventEmitter<MessageResponse>();
 
   loading = false;
   error: string | null = null;
@@ -24,7 +27,7 @@ export class MessageFormComponent {
 
   form = this.fb.group({
     to: [
-      '+18777804236',
+      environment.toPhoneNumber,
       [Validators.required, Validators.pattern(/^\+?\d{10,15}$/)],
     ],
     body: ['', [Validators.required, Validators.maxLength(250)]],
@@ -53,6 +56,7 @@ export class MessageFormComponent {
       .subscribe((res) => {
         if (res) {
           this.success = true;
+          this.sendMessage.emit(res);
           this.resetBodyField();
         }
       });
