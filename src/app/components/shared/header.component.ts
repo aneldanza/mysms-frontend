@@ -13,7 +13,8 @@ import { AuthService } from '../../services/auth/auth.service';
 export class HeaderComponent {
   auth = inject(AuthService);
   router = inject(Router);
-  isLoggedIn = this.auth.isLoggedIn();
+
+  decodedToken$ = this.auth.decodedToken$;
   user$ = this.auth.user$;
 
   logOut() {
@@ -23,8 +24,6 @@ export class HeaderComponent {
   }
 
   get username() {
-    // const user = this.auth.getUser();
-    // return user?.username || 'Guest';
-    return this.auth.getUser()?.username || 'Guest';
+    return this.auth.getCurrentUser()?.username || 'Guest';
   }
 }

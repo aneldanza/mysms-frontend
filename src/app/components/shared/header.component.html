@@ -4,7 +4,7 @@
   <h1 class="text-xl font-semibold tracking-wide">MySMS Messenger</h1>
 
   <div class="flex items-center gap-4">
-    <ng-container *ngIf="isLoggedIn; else loggedOut">
+    <ng-container *ngIf="decodedToken$ | async as token; else loggedOut">
       <span>Hello, {{ username }}</span>
       <button
         (click)="logOut()"
