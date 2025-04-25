@@ -1,34 +1,36 @@
 <div class="outlet">
-  <div class="w-full max-w-sm bg-white p-6 rounded-xl shadow">
-    <h2 class="text-2xl font-bold mb-6 text-center">Create Account</h2>
+  <div class="w-full max-w-sm p-6 rounded-xl shadow bg-background-card">
+    <h2 class="text-2xl font-bold mb-6 text-center text-primary-light">
+      Create Account
+    </h2>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
       <input
         formControlName="username"
         type="text"
         placeholder="Username"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        class="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
       />
 
       <input
         formControlName="email"
         type="email"
         placeholder="Email"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        class="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
       />
 
       <input
         formControlName="password"
         type="password"
         placeholder="Password"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        class="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
       />
 
       <input
         formControlName="password_confirmation"
         type="password"
         placeholder="Confirm Password"
-        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        class="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
       />
 
       <button

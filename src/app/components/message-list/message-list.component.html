@@ -35,16 +35,16 @@
   No messages sent yet.
 </div> -->
 
-<div class="card">
-  <h2 class="text-xl font-bold mb-4">
+<div class="card bg-background-card">
+  <h2 class="text-xl font-bold mb-4 text-primary-light">
     Message History ({{ messages.length }})
   </h2>
 
   <div *ngIf="isLoading" class="text-gray-500">Loading messages...</div>
   <div *ngIf="error" class="text-red-500">{{ error }}</div>
 
-  <div class="space-y-4 lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto pr-2">
-    <div *ngFor="let msg of messages" class="message-bubble animate-fade-in">
+  <div class="space-y-6 lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto">
+    <div *ngFor="let msg of messages" class="">
       <div class="message-meta">
         <div class="message-to">{{ msg.to }}</div>
         <span class="text-gray-500">
@@ -53,8 +53,10 @@
         </span>
       </div>
       <div class="message-body">{{ msg.body }}</div>
-      <div class="flex justify-between items-center mt-2">
-        <div class="message-status mt-2 text-sm">
+      <div class="flex justify-between items-center">
+        <div
+          class="message-status mt-2 text-sm font-light italic animate-fade-in"
+        >
           <span
             [ngClass]="{
               'text-green-600': msg.status === 'delivered',
