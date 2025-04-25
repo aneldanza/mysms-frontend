@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideHttpClient } from '@angular/common/http';
 import { MessageListComponent } from './message-list.component';
 
 describe('MessageListComponent', () => {
@@ -8,9 +8,9 @@ describe('MessageListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MessageListComponent]
-    })
-    .compileComponents();
+      imports: [MessageListComponent],
+      providers: [provideHttpClient()],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MessageListComponent);
     component = fixture.componentInstance;
