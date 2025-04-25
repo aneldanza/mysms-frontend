@@ -1,33 +1,34 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-  MessagesService,
-  MessageResponse,
-} from '../../services/messages.service';
+import { MessagesService } from '../../services/messages/messages.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-message-list',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './message-list.component.html',
   styleUrls: ['./message-list.component.css'],
-  imports: [CommonModule],
 })
 export class MessageListComponent implements OnInit {
-  messages: MessageResponse[] = [];
-  loading = true;
-  error = '';
+  private messageService = inject(MessagesService);
+  private auth = inject(AuthService);
+  messages: any[] = [];
+  isLoading = true;
+  error: string | null = null;
 
-  constructor(private messagesService: MessagesService) {}
-
-  ngOnInit(): void {
-    this.messagesService.getMessages().subscribe({
-      next: (data) => {
-        this.messages = data;
-        this.loading = false;
-      },
+  ngOnInit() {
+    this.messageService.getMessages().subscribe({
       error: (err) => {
-        this.error = 'Failed to load messages.';
-        this.loading = false;
-        console.error(err);
+        this.error = 'Failed to load messages';
+        this.isLoading = false;
+      },
+    });
+
+    this.messageService.messages$.subscribe({
+      next: (messages) => {
+        this.messages = messages;
+        this.isLoading = false;
       },
     });
   }

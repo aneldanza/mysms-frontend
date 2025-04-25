@@ -1,2 +1,41 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.card {
+  @apply shadow-lg p-4 rounded-lg bg-white;
+}
+
+.message-bubble {
+  @apply border p-3 rounded shadow-sm bg-gray-50 hover:bg-gray-100 transition;
+}
+
+.message-meta {
+  @apply flex justify-between items-center text-sm mb-1;
+}
+
+.message-to {
+  @apply font-bold text-green-700 flex items-center gap-1;
+}
+
+.message-body {
+  @apply text-gray-900 whitespace-pre-line;
+}
+
+.message-length {
+  @apply text-right text-xs text-gray-500 mt-1;
+}

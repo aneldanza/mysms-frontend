@@ -1,42 +1,95 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject, Output, EventEmitter } from '@angular/core';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Message, MessagesService } from '../../services/messages.service';
-import { MessageListComponent } from '../message-list/message-list.component';
+import {
+  MessagesService,
+  Message,
+  MessageResponse,
+} from '../../services/messages/messages.service';
+import { catchError, finalize, of } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-message-form',
-  imports: [FormsModule, CommonModule, MessageListComponent],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './message-form.component.html',
-  styleUrl: './message-form.component.css',
 })
 export class MessageFormComponent {
-  message: Message = {
-    to: '+18777804236',
-    body: '',
-  };
+  fb = inject(FormBuilder);
+  messageService = inject(MessagesService);
+  @Output() sendMessage = new EventEmitter<MessageResponse>();
 
-  status: string = '';
   loading = false;
+  error: string | null = null;
+  success = false;
+  tooLong = false;
 
-  constructor(private messagesService: MessagesService) {}
+  form = this.fb.group({
+    to: [
+      environment.toPhoneNumber,
+      [Validators.required, Validators.pattern(/^\+?\d{10,15}$/)],
+    ],
+    body: ['', [Validators.required, Validators.maxLength(250)]],
+  });
 
-  sendMessage() {
+  submit() {
+    if (this.form.invalid || this.loading) return;
+
     this.loading = true;
-    this.status = '';
+    this.error = null;
+    this.success = false;
 
-    this.messagesService.sendMessage(this.message).subscribe({
-      next: (res) => {
-        console.log(res);
-        this.status = 'Message sent successfully!';
-        this.message = { to: '', body: '' };
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.status = 'Failed to send message.';
-        this.loading = false;
-      },
-    });
+    const data = this.form.value as Message;
+
+    this.messageService
+      .sendMessage(data)
+      .pipe(
+        catchError((err) => {
+          this.error = 'Failed to send message. Please try again.';
+          return of(null);
+        }),
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.success = true;
+          this.sendMessage.emit(res);
+          this.resetBodyField();
+        }
+      });
+  }
+
+  resetBodyField() {
+    this.form.get('body')?.reset();
+    this.tooLong = false;
+  }
+
+  onInputLimit(event: Event) {
+    const input = event.target as HTMLTextAreaElement;
+    if (input.value.length > 250) {
+      this.tooLong = true;
+      input.value = input.value.slice(0, 250);
+      this.form.get('body')?.setValue(input.value);
+    } else {
+      this.tooLong = false;
+    }
+  }
+
+  onPasteLimit(event: ClipboardEvent) {
+    const paste = event.clipboardData?.getData('text') || '';
+    const currentValue = this.form.get('body')?.value || '';
+    const total = currentValue.length + paste.length;
+
+    if (total > 250) {
+      event.preventDefault();
+      this.tooLong = true;
+      const allowedPaste = paste.slice(0, 250 - currentValue.length);
+      this.form.get('body')?.setValue(currentValue + allowedPaste);
+    } else {
+      this.tooLong = false;
+    }
   }
 }
