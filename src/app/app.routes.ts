@@ -6,7 +6,7 @@ import { SignUpComponent } from './components/auth/sign-up/sign-up.component';
 export const routes: Routes = [
   {
     path: '',
-    // canActivate: [authGuard],
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./components/messages-homepage/message-home.component').then(
         (m) => m.MessageHomeComponent
