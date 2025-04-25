@@ -11,6 +11,14 @@ interface DecodedToken {
   scp: string;
 }
 
+interface User {
+  id: number;
+  email: string;
+  username: string;
+  created_at: string;
+  updated_at: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -18,6 +26,9 @@ export class AuthService {
   private apiUrl = environment.baseApi;
   private tokenKey = environment.tokenKey;
   private decodedTokenSubject = new BehaviorSubject<DecodedToken | null>(null);
+  private userSubject = new BehaviorSubject<User | null>(null);
+
+  user$ = this.userSubject.asObservable();
   decodedToken$ = this.decodedTokenSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {
@@ -35,12 +46,24 @@ export class AuthService {
     }
   }
 
+  getUserInfo() {
+    return this.http.get<User>(`${this.apiUrl}/me`).pipe(
+      tap((user: User) => {
+        this.userSubject.next(user);
+      })
+    );
+  }
+
+  getCurrentUser() {
+    return this.userSubject.value;
+  }
+
   signUp(data: any) {
     return this.http
       .post(`${this.apiUrl}/users`, { user: data }, { observe: 'response' })
       .pipe(
         tap((response: any) => {
-          this.handleToken(response);
+          this.handleLogin(response);
         })
       );
   }
@@ -54,7 +77,7 @@ export class AuthService {
       )
       .pipe(
         tap((response: any) => {
-          this.handleToken(response);
+          this.handleLogin(response);
         })
       );
   }
@@ -62,23 +85,25 @@ export class AuthService {
   logOut() {
     return this.http.delete(`${this.apiUrl}/users/sign_out`).pipe(
       tap(() => {
-        this.clearToken();
+        this.handleLogout();
       })
     );
   }
 
-  handleToken(res: any) {
+  handleLogin(res: any) {
     const token = res.headers?.get('Authorization')?.replace('Bearer ', '');
     if (token) {
       this.setToken(token);
+      this.getUserInfo().subscribe();
     } else {
       console.warn('No JWT token found in Authorization header');
     }
   }
 
-  clearToken() {
+  handleLogout() {
     localStorage.removeItem(this.tokenKey);
     this.decodedTokenSubject.next(null);
+    this.userSubject.next(null);
     this.router.navigate(['/sign-in']);
   }
 
@@ -92,17 +117,17 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    const user = this.getUser();
-    return !!user && !this.tokenExpired();
+    const token = this.getToken();
+    return !!token && !this.tokenExpired();
   }
 
   tokenExpired() {
-    const user = this.getUser();
-    if (!user?.exp) return true;
-    return new Date(user.exp * 1000) <= new Date();
+    const decodedToken = this.getDecodedToken();
+    if (!decodedToken?.exp) return true;
+    return new Date(decodedToken.exp * 1000) <= new Date();
   }
 
-  getUser(): DecodedToken | null {
+  getDecodedToken(): DecodedToken | null {
     return this.decodedTokenSubject.value;
   }
 }
