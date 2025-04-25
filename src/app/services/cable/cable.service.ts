@@ -24,7 +24,14 @@ export class CableService {
     this.consumer.subscriptions.create(
       { channel: 'MessageStatusChannel' },
       {
+        connected: () => {
+          console.log('Connected to MessageStatusChannel');
+        },
         received: (data: { id: string; status: MessageStatus }) => {
+          console.log(
+            'Received message status update:',
+            JSON.stringify(data, null, 2)
+          );
           this.statusUpdates.next(data);
         },
       }
