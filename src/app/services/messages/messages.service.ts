@@ -11,11 +11,8 @@ export type MessageStatus =
   | 'failed';
 
 export interface Message {
-  _id?: string;
   to: string;
   body: string;
-  status?: MessageStatus;
-  createdAt?: string;
 }
 
 export interface MessageResponse {
