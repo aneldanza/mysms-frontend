@@ -1,45 +1,59 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import {
-  Message,
   MessagesService,
+  Message,
 } from '../../services/messages/messages.service';
-import { MessageListComponent } from '../message-list/message-list.component';
+import { catchError, finalize, of } from 'rxjs';
 
 @Component({
   selector: 'app-message-form',
-  imports: [FormsModule, CommonModule, MessageListComponent],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './message-form.component.html',
-  styleUrl: './message-form.component.css',
 })
 export class MessageFormComponent {
-  message: Message = {
-    to: '+18777804236',
-    body: '',
-  };
+  fb = inject(FormBuilder);
+  messageService = inject(MessagesService);
 
-  status: string = '';
   loading = false;
+  error: string | null = null;
+  success = false;
 
-  constructor(private messagesService: MessagesService) {}
+  form = this.fb.group({
+    to: [
+      '+18777804236',
+      [Validators.required, Validators.pattern(/^\+?\d{10,15}$/)],
+    ],
+    body: ['', [Validators.required, Validators.maxLength(250)]],
+  });
 
-  sendMessage() {
+  submit() {
+    if (this.form.invalid || this.loading) return;
+
     this.loading = true;
-    this.status = '';
+    this.error = null;
+    this.success = false;
 
-    this.messagesService.sendMessage(this.message).subscribe({
-      next: (res) => {
-        console.log(res);
-        this.status = 'Message sent successfully!';
-        this.message = { to: '', body: '' };
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.status = 'Failed to send message.';
-        this.loading = false;
-      },
-    });
+    const data = this.form.value as Message;
+
+    this.messageService
+      .sendMessage(data)
+      .pipe(
+        catchError((err) => {
+          this.error = 'Failed to send message. Please try again.';
+          return of(null);
+        }),
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.success = true;
+          this.form.reset();
+        }
+      });
   }
 }
