@@ -1,27 +1,50 @@
-<div class="outlet">
+<div class="outlet flex-col">
   <div class="w-full max-w-sm p-6 rounded-xl shadow bg-background-card">
     <h2 class="text-2xl font-bold mb-6 text-center text-primary-light">
       Sign In
     </h2>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
-      <input
-        formControlName="email"
-        type="email"
-        placeholder="Email"
-        class="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-accent"
-      />
+      <div>
+        <input
+          formControlName="email"
+          type="email"
+          placeholder="Email"
+          class="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-accent"
+        />
+        <div
+          *ngIf="email?.invalid && email?.touched"
+          class="text-red-500 text-sm"
+        >
+          <span *ngIf="email?.errors?.['required']">Email is required.</span>
+          <span *ngIf="email?.errors?.['email']"
+            >Enter a valid email address.</span
+          >
+        </div>
+      </div>
 
-      <input
-        formControlName="password"
-        type="password"
-        placeholder="Password"
-        class="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-accent"
-      />
+      <div>
+        <input
+          formControlName="password"
+          type="password"
+          placeholder="Password"
+          class="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-accent"
+        />
+
+        <div
+          *ngIf="password?.invalid && password?.touched"
+          class="text-red-500 text-sm"
+        >
+          <span *ngIf="password?.errors?.['required']"
+            >Password is required.</span
+          >
+        </div>
+      </div>
 
       <button
         type="submit"
-        class="w-full bg-primary-accent text-white py-2 rounded-lg hover:bg-primary-accent-hover transition"
+        [disabled]="form.invalid"
+        class="w-full bg-primary-accent text-white py-2 rounded-lg hover:bg-primary-accent-hover transition disabled:opacity-50 disabled:cursor-not-allowed"
       >
         Sign In
       </button>
@@ -33,5 +56,9 @@
         >Sign Up</a
       >
     </p>
+  </div>
+
+  <div *ngIf="errorMessage" class="text-red-500 text-sm mt-6">
+    {{ errorMessage }}
   </div>
 </div>

@@ -18,6 +18,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 })
 export class SignInComponent {
   form: FormGroup;
+  errorMessage: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -34,8 +35,17 @@ export class SignInComponent {
     if (this.form.valid) {
       this.auth.signIn(this.form.value).subscribe({
         next: () => this.router.navigate(['']),
-        error: (err) => console.error(err),
+        error: (err) =>
+          (this.errorMessage = err.error?.error || 'An error occurred'),
       });
     }
+  }
+
+  get email() {
+    return this.form.get('email');
+  }
+
+  get password() {
+    return this.form.get('password');
   }
 }
