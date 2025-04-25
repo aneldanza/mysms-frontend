@@ -1,17 +1,32 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpInterceptorFn } from '@angular/common/http';
-
 import { authInterceptor } from './auth.interceptor';
+import { HttpRequest } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 describe('authInterceptor', () => {
-  const interceptor: HttpInterceptorFn = (req, next) => 
-    TestBed.runInInjectionContext(() => authInterceptor(req, next));
+  it('should add Authorization header when token is present', () => {
+    const mockToken = 'fake-jwt-token';
+    localStorage.setItem(environment.tokenKey, mockToken);
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
+    const mockRequest = new HttpRequest('GET', '/api/test');
+    const mockNext = jasmine.createSpy('next');
+
+    authInterceptor(mockRequest, mockNext);
+
+    const interceptedRequest = mockNext.calls.mostRecent().args[0];
+    expect(interceptedRequest.headers.get('Authorization')).toBe(
+      `Bearer ${mockToken}`
+    );
   });
 
-  it('should be created', () => {
-    expect(interceptor).toBeTruthy();
+  it('should not modify request if token is missing', () => {
+    localStorage.removeItem(environment.tokenKey);
+
+    const mockRequest = new HttpRequest('GET', '/api/test');
+    const mockNext = jasmine.createSpy('next');
+
+    authInterceptor(mockRequest, mockNext);
+
+    const interceptedRequest = mockNext.calls.mostRecent().args[0];
+    expect(interceptedRequest.headers.has('Authorization')).toBeFalse();
   });
 });
