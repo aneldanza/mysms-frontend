@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  baseApi: 'https://api.example.com',
+  baseApi: 'http://localhost:3000',
   tokenKey: 'sms_messenger_jwt',
   toPhoneNumber: '+18777804236',
 };
