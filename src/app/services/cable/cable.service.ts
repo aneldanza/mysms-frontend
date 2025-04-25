@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class CableService {
-  private consumer = createConsumer(`${environment.baseApi}/cable`); // use your deployed wss:// URL in prod
+  private consumer = createConsumer(environment.cableServiceUrl); // use your deployed wss:// URL in prod
   private statusUpdates = new BehaviorSubject<{
     id: string;
     status: MessageStatus;
