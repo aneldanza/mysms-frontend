@@ -46,14 +46,31 @@
   <div class="space-y-4 lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto pr-2">
     <div *ngFor="let msg of messages" class="message-bubble animate-fade-in">
       <div class="message-meta">
-        <div class="message-to">✅ {{ msg.to }}</div>
+        <div class="message-to">{{ msg.to }}</div>
         <span class="text-gray-500">
           {{ msg.created_at | date : "fullDate" }}
           {{ msg.created_at | date : "shortTime" }}
         </span>
       </div>
       <div class="message-body">{{ msg.body }}</div>
-      <div class="message-length">{{ msg.body?.length || 0 }}/250</div>
+      <div class="flex justify-between items-center mt-2">
+        <div class="message-status mt-2 text-sm">
+          <span
+            [ngClass]="{
+              'text-green-600': msg.status === 'delivered',
+              'text-yellow-600':
+                msg.status === 'sent' || msg.status === 'sending',
+              'text-blue-600': msg.status === 'queued',
+              'text-red-600':
+                msg.status === 'undelivered' || msg.status === 'failed',
+              'text-gray-500': !msg.status
+            }"
+          >
+            {{ msg.status || "pending" }}
+          </span>
+        </div>
+        <div class="message-length">{{ msg.body?.length || 0 }}/250</div>
+      </div>
     </div>
   </div>
 </div>
