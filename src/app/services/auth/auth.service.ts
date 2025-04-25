@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap, BehaviorSubject } from 'rxjs';
+import { tap, BehaviorSubject, catchError, of } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { jwtDecode } from 'jwt-decode';
@@ -33,7 +33,10 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {
     const token = this.getToken();
-    if (token) this.setInfoFromToken(token);
+    if (token) {
+      this.setInfoFromToken(token);
+      this.getUserInfo().subscribe();
+    }
   }
 
   setInfoFromToken(token: string) {
@@ -50,6 +53,11 @@ export class AuthService {
     return this.http.get<User>(`${this.apiUrl}/me`).pipe(
       tap((user: User) => {
         this.userSubject.next(user);
+      }),
+      catchError((err) => {
+        console.warn('Failed to fetch user info', err);
+        this.handleLogout();
+        return of(null);
       })
     );
   }
