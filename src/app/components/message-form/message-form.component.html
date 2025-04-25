@@ -55,8 +55,6 @@
       <span *ngIf="!loading">Submit</span>
       <span *ngIf="loading" class="animate-pulse">Sending...</span>
     </button>
-
-    <div *ngIf="success" class="text-green-600 text-sm">✅ Message sent!</div>
   </div>
 
   <p *ngIf="error" class="text-sm text-red-600">{{ error }}</p>

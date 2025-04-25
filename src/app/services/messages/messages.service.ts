@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export type MessageStatus =
   | 'queued'
@@ -31,15 +32,28 @@ export interface MessageResponse {
   providedIn: 'root',
 })
 export class MessagesService {
-  private apiUrl = 'http://localhost:3000/messages';
+  private apiUrl = `${environment.baseApi}/messages`;
+  private messagesSubject = new BehaviorSubject<MessageResponse[]>([]);
+  messages$ = this.messagesSubject.asObservable();
+  private messageStatusSubject = new BehaviorSubject<MessageStatus>('queued');
+  messageStatus$ = this.messageStatusSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
   sendMessage(message: Message): Observable<MessageResponse> {
-    return this.http.post<MessageResponse>(this.apiUrl, { message });
+    return this.http.post<MessageResponse>(this.apiUrl, { message }).pipe(
+      tap((newMsg) => {
+        const currentMessages = this.messagesSubject.getValue();
+        this.messagesSubject.next([newMsg, ...currentMessages]);
+      })
+    );
   }
 
   getMessages(): Observable<MessageResponse[]> {
-    return this.http.get<MessageResponse[]>(this.apiUrl);
+    return this.http.get<MessageResponse[]>(this.apiUrl).pipe(
+      tap((messages) => {
+        this.messagesSubject.next(messages);
+      })
+    );
   }
 }

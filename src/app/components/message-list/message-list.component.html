@@ -1,4 +1,6 @@
-<div *ngIf="loading" class="text-center text-gray-500">Loading messages...</div>
+<div *ngIf="isLoading" class="text-center text-gray-500">
+  Loading messages...
+</div>
 <div *ngIf="error" class="text-red-500 text-center">{{ error }}</div>
 
 <ul *ngIf="messages.length" class="space-y-4">
@@ -27,7 +29,7 @@
 </ul>
 
 <div
-  *ngIf="!loading && messages.length === 0"
+  *ngIf="!isLoading && messages.length === 0"
   class="text-center text-gray-500"
 >
   No messages sent yet.

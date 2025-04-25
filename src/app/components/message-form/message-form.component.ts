@@ -52,7 +52,7 @@ export class MessageFormComponent {
       .subscribe((res) => {
         if (res) {
           this.success = true;
-          this.form.reset();
+          this.form.get('body')?.reset();
         }
       });
   }
