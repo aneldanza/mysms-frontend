@@ -32,9 +32,6 @@ describe('AuthService', () => {
 
     service = TestBed.inject(AuthService);
     httpMock = TestBed.inject(HttpTestingController);
-    // const req = httpMock.expectOne(`${environment.baseApi}/me`);
-    // req.flush(null); // or a mock user object
-    localStorage.clear();
   });
 
   afterEach(() => {
