@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { CableService } from '../cable/cable.service';
 
 export type MessageStatus =
   | 'queued'
@@ -38,7 +39,18 @@ export class MessagesService {
   private messageStatusSubject = new BehaviorSubject<MessageStatus>('queued');
   messageStatus$ = this.messageStatusSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cable: CableService) {
+    this.cable.status$.subscribe((data) => {
+      if (!data) return;
+
+      const updated = this.messagesSubject
+        .getValue()
+        .map((msg) =>
+          msg._id.$oid === data.id ? { ...msg, status: data.status } : msg
+        );
+      this.messagesSubject.next(updated);
+    });
+  }
 
   sendMessage(message: Message): Observable<MessageResponse> {
     return this.http.post<MessageResponse>(this.apiUrl, { message }).pipe(
