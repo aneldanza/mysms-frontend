@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { createConsumer } from '@rails/actioncable';
 import { BehaviorSubject } from 'rxjs';
 import { MessageStatus } from '../messages/messages.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CableService {
-  private consumer = createConsumer('ws://localhost:3000/cable'); // use your deployed wss:// URL in prod
+  private consumer = createConsumer(`${environment.baseApi}/cable`); // use your deployed wss:// URL in prod
   private statusUpdates = new BehaviorSubject<{
     id: string;
     status: MessageStatus;
