@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  baseApi: 'https://api.example.com',
+  baseApi: 'https://sms-messenger-api-9c3caa66eb6a.herokuapp.com',
   tokenKey: 'sms_messenger_jwt',
   toPhoneNumber: '+18777804236',
 };
