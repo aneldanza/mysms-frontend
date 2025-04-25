@@ -27,6 +27,9 @@ export class CableService {
         connected: () => {
           console.log('Connected to MessageStatusChannel');
         },
+        disconnected: () => {
+          console.warn('Disconnected from MessageStatusChannel');
+        },
         received: (data: { id: string; status: MessageStatus }) => {
           console.log(
             'Received message status update:',
