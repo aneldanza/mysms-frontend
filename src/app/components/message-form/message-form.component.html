@@ -11,7 +11,7 @@
       type="tel"
       placeholder="+1234567890"
       readonly
-      class="input-field bg-gray-100 border-border"
+      class="input-field bg-gray-100 border-border focus:ring-secondary-accent-hover"
     />
     <p
       *ngIf="form.get('to')?.invalid && form.get('to')?.touched"
@@ -30,7 +30,7 @@
       (input)="onInputLimit($event)"
       (paste)="onPasteLimit($event)"
       placeholder="Type your message..."
-      class="input-field border-border"
+      class="input-field border-border focus:ring-secondary-accent-hover"
     ></textarea>
     <p
       *ngIf="form.get('body')?.invalid && form.get('body')?.touched"
@@ -57,7 +57,7 @@
     <button
       type="submit"
       [disabled]="form.invalid || loading"
-      class="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-3xl shadow-sm text-white bg-accent hover:bg-accent-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-hover disabled:opacity-50 disabled:cursor-not-allowed"
+      class="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-3xl shadow-sm text-white bg-secondary-accent hover:bg-secondary-accent-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent-hover disabled:opacity-50 disabled:cursor-not-allowed"
     >
       <span *ngIf="!loading">Submit</span>
       <span *ngIf="loading" class="animate-pulse">Sending...</span>
