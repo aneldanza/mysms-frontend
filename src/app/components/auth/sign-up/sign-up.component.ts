@@ -18,6 +18,7 @@ import {
 })
 export class SignUpComponent {
   form: FormGroup;
+  errorMessage: string | null = null;
 
   constructor(
     private auth: AuthService,
@@ -40,8 +41,26 @@ export class SignUpComponent {
         },
         error: (err) => {
           console.error(err);
+          this.errorMessage =
+            err.error?.message || 'Failed to sign up. Please try again.';
         },
       });
     }
+  }
+
+  get email() {
+    return this.form.get('email');
+  }
+
+  get password() {
+    return this.form.get('password');
+  }
+
+  get password_confirmation() {
+    return this.form.get('password_confirmation');
+  }
+
+  get username() {
+    return this.form.get('username');
   }
 }
