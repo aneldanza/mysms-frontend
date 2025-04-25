@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MessageHomeComponent } from './message-home.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('MessageHomeComponent', () => {
   let component: MessageHomeComponent;
@@ -8,9 +9,9 @@ describe('MessageHomeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MessageHomeComponent]
-    })
-    .compileComponents();
+      imports: [MessageHomeComponent],
+      providers: [provideHttpClient()],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MessageHomeComponent);
     component = fixture.componentInstance;
