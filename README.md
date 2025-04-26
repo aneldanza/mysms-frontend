@@ -87,7 +87,7 @@ npm run test
 
 📸 Wireframe
 
-<img src="public/message_board.png" alt="Wireframe" width="500" />
+<img src="public/screenshot.png" alt="Wireframe" width="500" />
 
 🔗 Related Repositories
 
