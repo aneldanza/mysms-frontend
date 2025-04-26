@@ -1,59 +1,96 @@
-# MysmsFrontend
+📱 MySMS Messenger Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.9.
+This is the Angular frontend for the MySMS Messenger app — a modern SMS sending platform connected to a Ruby on Rails API backend with Twilio integration. It allows users to sign up, log in, send SMS messages, and track their delivery statuses live using WebSockets.
 
-## Development server
+🚀 Technologies Used
 
-To start a local development server, run:
+- Angular 19
+- TailwindCSS 3
+- RxJS
+- @rails/actioncable
+- WebSockets (live status updates)
 
-```bash
-ng serve
-```
+📦 Setup Instructions
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Clone the repository:
 
 ```bash
-ng generate component component-name
+git clone https://github.com/yourusername/mysms-messenger-frontend.git
+cd mysms-messenger-frontend
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Install dependencies:
 
 ```bash
-ng generate --help
+npm install
 ```
 
-## Building
-
-To build the project run:
+Run the development server:
 
 ```bash
-ng build
+npm run dev
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The app will be available at [http://localhost:4200](http://localhost:4200).
 
-## Running unit tests
+✨ Features
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+- **Authentication (JWT-based)**
+  - User Sign Up
+  - User Sign In
+  - Session management with localStorage
+- **Message Management**
+  - Send SMS messages
+  - View message history
+- **Live Updates**
+  - Real-time delivery status updates via WebSockets
+- **Responsive Design**
+  - Optimized for mobile and desktop views
+- **TailwindCSS Theming**
+  - Custom color palette
+  - Modern, clean UI
+- **Error Handling**
+  - Friendly error messages for failed sends and authentication issues
+
+🛠️ Architecture
+
+- **Standalone Components**:
+  - `SignInComponent`
+  - `SignUpComponent`
+  - `MessageFormComponent`
+  - `MessageListComponent`
+  - `HeaderComponent`
+- **Services**:
+  - `AuthService` — manages authentication and JWT
+  - `MessagesService` — handles sending and fetching messages
+  - `CableService` — handles real-time WebSocket communication
+- **Interceptors**:
+  - `authInterceptor` — attaches JWT tokens to outgoing HTTP requests
+- **Guards**:
+  - `authGuard` — protects private routes from unauthorized access
+
+🧪 Testing
+
+Run the tests with:
 
 ```bash
-ng test
+npm run test
 ```
 
-## Running end-to-end tests
+**Testing tools**:
 
-For end-to-end (e2e) testing, run:
+- Jasmine
+- Karma
+- HttpClientTestingModule for API mocks
 
-```bash
-ng e2e
-```
+📸 Screenshots
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+![app screenshot](message_board.png)
 
-## Additional Resources
+🔗 Related Repositories
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- [`mysms-api`](https://github.com/aneldanza/mysms-api) (Ruby on Rails API)
+
+❤️ Contributing
+
+Pull requests are welcome! For major changes, please open an issue first to discuss the changes you would like to make.
