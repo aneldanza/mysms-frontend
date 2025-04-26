@@ -83,9 +83,7 @@ npm run test
 - Karma
 - HttpClientTestingModule for API mocks
 
-📸 Wireframe
-
-📸 Wireframe
+📸 Screenshot
 
 <img src="public/screenshot.png" alt="Wireframe" width="500" />
 
