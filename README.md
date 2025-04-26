@@ -85,7 +85,7 @@ npm run test
 
 📸 Screenshots
 
-![app screenshot](message_board.png)
+![wireframe](message_board.png)
 
 🔗 Related Repositories
 
