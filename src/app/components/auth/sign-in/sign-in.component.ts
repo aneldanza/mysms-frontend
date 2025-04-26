@@ -20,6 +20,7 @@ export class SignInComponent {
   form: FormGroup;
   errorMessage: string | null = null;
   showPassword: boolean = false;
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -28,16 +29,19 @@ export class SignInComponent {
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required, Validators.minLength(6)],
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
   onSubmit() {
     if (this.form.valid) {
+      this.loading = true;
       this.auth.signIn(this.form.value).subscribe({
         next: () => this.router.navigate(['']),
-        error: (err) =>
-          (this.errorMessage = err.error?.error || 'An error occurred'),
+        error: (err) => {
+          this.loading = false;
+          this.errorMessage = err.error?.error || 'An error occurred';
+        },
       });
     }
   }

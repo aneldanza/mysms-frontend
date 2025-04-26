@@ -51,6 +51,7 @@ export class MessageFormComponent {
         }),
         finalize(() => {
           this.loading = false;
+          this.error = null;
         })
       )
       .subscribe((res) => {

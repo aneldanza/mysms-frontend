@@ -20,6 +20,7 @@ export class SignUpComponent {
   form: FormGroup;
   errorMessage: string | null = null;
   showPassword: boolean = false;
+  loading: boolean = false;
 
   constructor(
     private auth: AuthService,
@@ -31,8 +32,7 @@ export class SignUpComponent {
       password: ['', [Validators.required, Validators.minLength(6)]],
       password_confirmation: [
         '',
-        [Validators.required],
-        Validators.minLength(6),
+        [Validators.required, Validators.minLength(6)],
       ],
       username: ['', [Validators.required]],
     });
@@ -40,11 +40,14 @@ export class SignUpComponent {
 
   onSubmit() {
     if (this.form.valid) {
+      this.loading = true;
       this.auth.signUp(this.form.value).subscribe({
         next: () => {
+          this.loading = false;
           this.router.navigate(['/']);
         },
         error: (err) => {
+          this.loading = false;
           console.error(err);
           this.errorMessage =
             err.error?.message || 'Failed to sign up. Please try again.';
