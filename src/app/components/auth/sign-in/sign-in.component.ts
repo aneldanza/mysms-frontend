@@ -19,6 +19,7 @@ import { AuthService } from '../../../services/auth/auth.service';
 export class SignInComponent {
   form: FormGroup;
   errorMessage: string | null = null;
+  showPassword: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -27,7 +28,7 @@ export class SignInComponent {
   ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      password: ['', Validators.required, Validators.minLength(6)],
     });
   }
 

@@ -19,6 +19,7 @@ import {
 export class SignUpComponent {
   form: FormGroup;
   errorMessage: string | null = null;
+  showPassword: boolean = false;
 
   constructor(
     private auth: AuthService,
@@ -28,7 +29,11 @@ export class SignUpComponent {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      password_confirmation: ['', [Validators.required]],
+      password_confirmation: [
+        '',
+        [Validators.required],
+        Validators.minLength(6),
+      ],
       username: ['', [Validators.required]],
     });
   }
